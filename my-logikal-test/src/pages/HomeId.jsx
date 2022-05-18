@@ -26,9 +26,9 @@ const HomeId = () => {
             </h1>
             <div >
                 <h2>
-                    Заголовок каментария: {post.title}  
+                    Заголовок каментария: <br/> {post.title}  
                     <div>
-                       опесание: {post.body}  
+                       Опесание: <br/> {post.body}  
                     </div> 
                    
                 </h2>

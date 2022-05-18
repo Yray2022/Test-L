@@ -4,6 +4,7 @@ import '../App.css';
 import PostCreate from '../components/PostCreate';
 import PostList from '../components/PostList';
 import { useSortPosts } from '../hook/useFetfing';
+import { useSortQuery } from '../hook/useSortPostsAndQuery';
 import { getPageCount } from '../utils/pages';
 
 function Home() {
@@ -17,13 +18,14 @@ function Home() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   let pagesArray = useSortPosts(totalPages)
+  let sortedPosts = useSortQuery(posts, sortPosts)
 
 
   useEffect(() => {
-      fetchPosts()
+      fetchPosts() // загружаем посты 
   },[page])
 
-  async function fetchPosts() {
+  async function fetchPosts() { // запрос на сервер и дастам сотуда количество постов
     const response = await PostService.getAll(limit, page)
     setPosts(response.data)
     const totalCount = response.headers['x-total-count']
@@ -34,15 +36,8 @@ function Home() {
     setPage(page)
   }
 
-  const sortedPosts = useMemo(() => {
-    if (sortPosts) {
-      return [...posts].sort((a,b) => a[sortPosts].localeCompare(b[sortPosts]))
-    }
-    return posts
-  }, [sortPosts, posts])
-
   const sortedAndQueryPost = useMemo(() => {
-    return sortedPosts.filter(post => post.title.includes(getSortedPost))
+    return sortedPosts.filter(post => post.title.includes(getSortedPost)) // 1 часть поиска ето хук в папке "hook"
   },[getSortedPost, sortedPosts])
 
   const removePost = (post) => {
