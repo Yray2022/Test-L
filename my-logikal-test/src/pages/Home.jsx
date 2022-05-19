@@ -4,7 +4,7 @@ import '../App.css';
 import PostCreate from '../components/PostCreate';
 import PostList from '../components/PostList';
 import { useSortPosts } from '../hook/useFetfing';
-import { useSortQuery } from '../hook/useSortPostsAndQuery';
+import { useSortedPostsQuery, useSortQuery } from '../hook/useSortPostsAndQuery';
 import { getPageCount } from '../utils/pages';
 
 function Home() {
@@ -19,13 +19,14 @@ function Home() {
   const [limit, setLimit] = useState(10)
   let pagesArray = useSortPosts(totalPages)
   let sortedPosts = useSortQuery(posts, sortPosts)
+  let sortedAndQueryPost = useSortedPostsQuery(getSortedPost, sortedPosts)
 
 
   useEffect(() => {
-      fetchPosts() // загружаем посты 
+      fetchPosts() 
   },[page])
 
-  async function fetchPosts() { // запрос на сервер и дастам сотуда количество постов
+  async function fetchPosts() { 
     const response = await PostService.getAll(limit, page)
     setPosts(response.data)
     const totalCount = response.headers['x-total-count']
@@ -35,10 +36,6 @@ function Home() {
   const changePage = (page) => {
     setPage(page)
   }
-
-  const sortedAndQueryPost = useMemo(() => {
-    return sortedPosts.filter(post => post.title.includes(getSortedPost)) // 1 часть поиска ето хук в папке "hook"
-  },[getSortedPost, sortedPosts])
 
   const removePost = (post) => {
     setPosts(posts.filter(p => p.id !== post.id))

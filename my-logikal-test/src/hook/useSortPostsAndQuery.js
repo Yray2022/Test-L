@@ -10,3 +10,9 @@ export const useSortQuery = (posts, sortPosts,) => {
       }, [sortPosts, posts])
       return sortedPosts
 }
+export const useSortedPostsQuery = (getSortedPost, sortedPosts) => {
+  const sortedAndQueryPost = useMemo(() => { 
+    return sortedPosts.filter(post => post.title.includes(getSortedPost))  
+},[getSortedPost, sortedPosts])
+    return sortedAndQueryPost
+}
